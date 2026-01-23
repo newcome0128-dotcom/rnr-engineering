@@ -413,4 +413,25 @@ body.dark .projects {
   .nav-link {
     margin: 10px 0;
   }
+
+/* Projects buttons active */
+.filter-bar button.active { outline: 2px solid rgba(0,0,0,.25); }
+
+/* Make project card a button with no ugly style */
+.project-card {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  text-align: left;
+}
+
+/* Modal backdrop visible */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.7);
+  display: grid;
+  place-items: center;
+  z-index: 2000;
+}
 }
