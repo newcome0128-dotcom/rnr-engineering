@@ -1,30 +1,55 @@
-import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
 import "./globals.css";
 
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["300", "400", "600", "700"],
-  display: "swap",
-});
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
-export const metadata: Metadata = {
-  title: "RNR Engineering Services | General Contractor & Supplies",
-  description:
-    "RNR Engineering Services provides professional construction, engineering, and general supply solutions.",
+export const metadata = {
+  title: "RNR Engineering Services",
+  description: "Civil, Mechanical, Electrical Works & General Supplies",
+  metadataBase: new URL(siteUrl),
+
+  openGraph: {
+    title: "RNR Engineering Services",
+    description: "Civil, Mechanical, Electrical Works & General Supplies",
+    url: siteUrl,
+    siteName: "RNR Engineering Services",
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "RNR Engineering Services",
+      },
+    ],
+    locale: "en_PH",
+    type: "website",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "RNR Engineering Services",
+    description: "Civil, Mechanical, Electrical Works & General Supplies",
+    images: ["/og.png"],
+  },
+
   icons: {
-    icon: [{ url: "/images/LOGO.png" }],
+    icon: "/favicon.ico",
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en" className={poppins.className}>
+    <html lang="en">
       <head>
-        {/* Font Awesome (kept from CodePen) */}
         <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+          rel="preload"
+          as="image"
+          href="/images/backgrounds/site-bg.webp"
+          type="image/webp"
         />
       </head>
       <body>{children}</body>

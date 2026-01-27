@@ -1,25 +1,46 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
-export default function useRevealOnScroll() {
+export default function useRevealOnScroll<T extends HTMLElement>() {
+  const ref = useRef<T | null>(null);
+
   useEffect(() => {
-    const els = Array.from(document.querySelectorAll<HTMLElement>(".scroll-reveal"));
+    const el = ref.current;
+    if (!el) return;
 
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            (entry.target as HTMLElement).classList.add("reveal");
-            io.unobserve(entry.target);
-          }
-        }
+    const reduce =
+      window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
+
+    if (reduce) {
+      el.classList.add("show");
+      el.querySelectorAll<HTMLElement>("[data-stagger]").forEach((child) => {
+        child.classList.add("show");
+      });
+      return;
+    }
+
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+
+        el.classList.add("show");
+
+        // Stagger children (cards)
+        const kids = Array.from(el.querySelectorAll<HTMLElement>("[data-stagger]"));
+        kids.forEach((k, i) => {
+          k.style.transitionDelay = `${i * 70}ms`;
+          k.classList.add("show");
+        });
+
+        obs.disconnect();
       },
-      { threshold: 0.18 }
+      { threshold: 0.12 }
     );
 
-    els.forEach((el) => io.observe(el));
-
-    return () => io.disconnect();
+    obs.observe(el);
+    return () => obs.disconnect();
   }, []);
+
+  return ref;
 }
