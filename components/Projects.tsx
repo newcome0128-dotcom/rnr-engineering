@@ -5,193 +5,126 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { projects as ALL } from "@/data/projects";
 import { BLUR_DATA_URL } from "@/lib/imagePlaceholders";
 
+type ZoomMode = 1 | 2;
+
 export default function Projects() {
   // Lightbox state
-  const [openId, setOpenId] = useState<string | null>(null);
+  const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
   const [idx, setIdx] = useState(0);
+  const [zoom, setZoom] = useState<ZoomMode>(1);
 
-  // Slideshow
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [reduceMotion, setReduceMotion] = useState(false);
-  const [isHoveringStage, setIsHoveringStage] = useState(false);
-
-  // Zoom
-  const [isZoomed, setIsZoomed] = useState(false);
-
-  const dialogRef = useRef<HTMLDivElement | null>(null);
-
-  // Swipe tracking
+  // for swipe
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
 
-  const activeProject = useMemo(() => {
-    return openId ? ALL.find((p) => p.id === openId) : null;
-  }, [openId]);
+  const activeProject = useMemo(
+    () => (activeProjectId ? ALL.find((p) => p.id === activeProjectId) : null),
+    [activeProjectId]
+  );
 
   const images = activeProject?.images ?? [];
   const title = activeProject?.title ?? "";
-  const subtitle = activeProject?.subtitle ?? "";
   const description = activeProject?.description ?? "";
+  const activeSrc = images.length ? images[(idx + images.length) % images.length] : "/images/hero-bg.jpg";
 
-  const activeSrc = images[idx] ?? images[0];
-  const countLabel = images.length > 1 ? `${idx + 1}/${images.length}` : "";
+  const isOpen = !!activeProject;
 
-  const quoteProject = () => {
-    // store project title for your ContactSection (optional to use)
-    try {
-      localStorage.setItem("quoteProject", title);
-    } catch {}
+  const open = (projectId: string) => {
+    setActiveProjectId(projectId);
+    setIdx(0);
+    setZoom(1);
   };
 
-  function openLightbox(projectId: string) {
-    setOpenId(projectId);
+  const close = () => {
+    setActiveProjectId(null);
     setIdx(0);
-    setIsPlaying(false);
-    setIsZoomed(false);
+    setZoom(1);
+  };
 
-    // lock scroll
-    document.documentElement.style.overflow = "hidden";
-    document.body.style.overflow = "hidden";
-
-    setTimeout(() => dialogRef.current?.focus(), 30);
-  }
-
-  function closeLightbox() {
-    setOpenId(null);
-    setIsPlaying(false);
-    setIsZoomed(false);
-
-    // unlock scroll
-    document.documentElement.style.overflow = "";
-    document.body.style.overflow = "";
-  }
-
-  function next() {
-    if (images.length <= 1) return;
-    setIdx((v) => (v + 1) % images.length);
-  }
-
-  function prev() {
-    if (images.length <= 1) return;
+  const prev = () => {
+    if (!images.length) return;
+    setZoom(1);
     setIdx((v) => (v - 1 + images.length) % images.length);
-  }
+  };
 
-  // prefers-reduced-motion
-  useEffect(() => {
-    const mq = window.matchMedia?.("(prefers-reduced-motion: reduce)");
-    const update = () => setReduceMotion(!!mq?.matches);
-    update();
-    mq?.addEventListener?.("change", update);
-    return () => mq?.removeEventListener?.("change", update);
-  }, []);
+  const next = () => {
+    if (!images.length) return;
+    setZoom(1);
+    setIdx((v) => (v + 1) % images.length);
+  };
 
-  // keyboard controls
+  // Close on ESC + Arrow navigation
   useEffect(() => {
-    if (!openId) return;
+    if (!isOpen) return;
 
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeLightbox();
-
-      if (e.key === "ArrowLeft") {
-        e.preventDefault();
-        setIsPlaying(false);
-        setIsZoomed(false);
-        prev();
-      }
-
-      if (e.key === "ArrowRight") {
-        e.preventDefault();
-        setIsPlaying(false);
-        setIsZoomed(false);
-        next();
-      }
-
-      if (e.key === " " || e.key === "Spacebar") {
-        e.preventDefault();
-        if (!reduceMotion) setIsPlaying((v) => !v);
-      }
-
-      if (e.key.toLowerCase() === "z") {
-        e.preventDefault();
-        setIsZoomed((v) => !v);
-      }
+      if (e.key === "Escape") close();
+      if (e.key === "ArrowLeft") prev();
+      if (e.key === "ArrowRight") next();
     };
 
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openId, images.length, reduceMotion]);
+  }, [isOpen, images.length]);
 
-  // slideshow autoplay
+  // Lock background scroll when modal is open
   useEffect(() => {
-    if (!openId) return;
-    if (!isPlaying) return;
-    if (reduceMotion) return;
-    if (isHoveringStage) return;
-    if (images.length <= 1) return;
-
-    const interval = window.setInterval(() => {
-      if (document.visibilityState !== "visible") return;
-      setIsZoomed(false);
-      next();
-    }, 3200);
-
-    return () => window.clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openId, isPlaying, reduceMotion, isHoveringStage, images.length]);
-
-  // close if click backdrop
-  const onBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) closeLightbox();
-  };
+    if (!isOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [isOpen]);
 
   // Swipe handlers (mobile)
   const onTouchStart = (e: React.TouchEvent) => {
-    if (e.touches.length !== 1) return;
-    touchStartX.current = e.touches[0].clientX;
-    touchStartY.current = e.touches[0].clientY;
+    const t = e.touches[0];
+    touchStartX.current = t.clientX;
+    touchStartY.current = t.clientY;
   };
 
   const onTouchEnd = (e: React.TouchEvent) => {
-    const sx = touchStartX.current;
-    const sy = touchStartY.current;
-    if (sx == null || sy == null) return;
+    if (touchStartX.current == null || touchStartY.current == null) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchStartX.current;
+    const dy = t.clientY - touchStartY.current;
 
-    const ex = e.changedTouches[0].clientX;
-    const ey = e.changedTouches[0].clientY;
+    touchStartX.current = null;
+    touchStartY.current = null;
 
-    const dx = ex - sx;
-    const dy = ey - sy;
-
-    // if user scrolls vertically, ignore swipe
+    // ignore mostly-vertical swipes
     if (Math.abs(dy) > Math.abs(dx)) return;
 
-    const SWIPE_THRESHOLD = 50; // px
-    if (dx > SWIPE_THRESHOLD) {
-      setIsPlaying(false);
-      setIsZoomed(false);
-      prev();
-    } else if (dx < -SWIPE_THRESHOLD) {
-      setIsPlaying(false);
-      setIsZoomed(false);
-      next();
-    }
+    // threshold
+    if (dx > 40) prev();
+    if (dx < -40) next();
   };
 
-  return (
-    <>
-      {/* GRID */}
-      <div className="project-grid">
-        {ALL.map((p) => {
-          const cover = p.images?.[0];
+  const requestQuoteHref = useMemo(() => {
+    const msg = `Hi RNR Engineering Services, I'd like to request a quote for the project: ${title}.`;
+    return `#contact?project=${encodeURIComponent(title)}&message=${encodeURIComponent(msg)}`;
+  }, [title]);
 
+  return (
+    <section id="projects" className="projects scroll-reveal">
+      <div className="section-header">
+        <h2>Projects</h2>
+        <p>Selected works and installations.</p>
+      </div>
+
+      {/* GRID (JCVA-like clean tile layout) */}
+      <div className="projects-tiles">
+        {ALL.map((p) => {
+          const cover = p.images?.[0] ?? "/images/hero-bg.jpg";
           return (
             <button
               key={p.id}
               type="button"
-              className="project-card"
-              onClick={() => openLightbox(p.id)}
-              aria-label={`Open ${p.title} gallery`}
+              className="project-tile"
+              onClick={() => open(p.id)}
+              aria-label={`Open project ${p.title}`}
             >
               <Image
                 src={cover}
@@ -202,153 +135,101 @@ export default function Projects() {
                 placeholder="blur"
                 blurDataURL={BLUR_DATA_URL}
               />
-
-              <div className="project-overlay">
-                <h4 className="project-title">{p.title}</h4>
-                {!!p.subtitle && <p className="project-subtitle">{p.subtitle}</p>}
+              <div className="tile-overlay">
+                <div className="tile-title">{p.title}</div>
+                {/* hover-only subtitle */}
+                <div className="tile-subtitle">View photos</div>
               </div>
             </button>
           );
         })}
       </div>
 
-      {/* LIGHTBOX */}
-      {openId && activeProject && (
-        <div className="lightbox" role="dialog" aria-modal="true" onMouseDown={onBackdropClick}>
-          <div className="lightbox-inner" tabIndex={-1} ref={dialogRef}>
-            {/* Top bar */}
-            <div className="lightbox-top">
-              <div className="lightbox-meta">
-                <div className="lightbox-title">{title}</div>
-                {!!subtitle && <div className="lightbox-subtitle">{subtitle}</div>}
+      {/* LIGHTBOX MODAL */}
+      {isOpen && (
+        <div className="lb" role="dialog" aria-modal="true" aria-label={`Project gallery: ${title}`}>
+          <button className="lb-backdrop" type="button" onClick={close} aria-label="Close gallery" />
+
+          <div className="lb-panel">
+            <div className="lb-top">
+              <div className="lb-heading">
+                <div className="lb-title">{title}</div>
+                <div className="lb-count">{images.length ? `${idx + 1} / ${images.length}` : ""}</div>
               </div>
 
-              <div className="lightbox-actions">
-                {images.length > 1 && (
-                  <button
-                    type="button"
-                    className="lb-btn"
-                    onClick={() => setIsPlaying((v) => !v)}
-                    disabled={reduceMotion}
-                    title={reduceMotion ? "Disabled (Reduce Motion enabled)" : isPlaying ? "Pause" : "Play"}
-                  >
-                    {isPlaying ? "Pause" : "Play"}
-                  </button>
-                )}
-
+              <div className="lb-actions">
                 <button
                   type="button"
                   className="lb-btn"
-                  onClick={() => setIsZoomed((v) => !v)}
-                  title={isZoomed ? "Zoom out (Z)" : "Zoom in (Z)"}
+                  onClick={() => setZoom((z) => (z === 1 ? 2 : 1))}
+                  aria-label={zoom === 1 ? "Zoom in" : "Zoom out"}
+                  title={zoom === 1 ? "Zoom in" : "Zoom out"}
                 >
-                  {isZoomed ? "Zoom out" : "Zoom in"}
+                  {zoom === 1 ? "＋" : "－"}
                 </button>
 
-                <button type="button" className="lb-btn" onClick={closeLightbox} aria-label="Close">
+                <button type="button" className="lb-btn" onClick={close} aria-label="Close" title="Close (Esc)">
                   ✕
                 </button>
               </div>
             </div>
 
-            {/* Stage */}
             <div
-              className={`lightbox-stage ${isZoomed ? "zoomed" : ""}`}
-              onMouseEnter={() => setIsHoveringStage(true)}
-              onMouseLeave={() => setIsHoveringStage(false)}
+              className={`lb-stage ${zoom === 2 ? "zoomed" : ""}`}
               onTouchStart={onTouchStart}
               onTouchEnd={onTouchEnd}
             >
-              <Image
-                src={activeSrc}
-                alt={`${title} image ${idx + 1}`}
-                fill
-                sizes="100vw"
-                style={{ objectFit: "contain" }}
-                placeholder="blur"
-                blurDataURL={BLUR_DATA_URL}
-                priority
-              />
+              <button type="button" className="lb-arrow prev" onClick={prev} aria-label="Previous image">
+                ‹
+              </button>
 
-              {images.length > 1 && <div className="lightbox-counter">{countLabel}</div>}
+              <div className="lb-imageWrap">
+                <Image
+                  src={activeSrc}
+                  alt={`${title} image ${idx + 1}`}
+                  fill
+                  sizes="100vw"
+                  style={{ objectFit: zoom === 2 ? "cover" : "contain" }}
+                  placeholder="blur"
+                  blurDataURL={BLUR_DATA_URL}
+                  priority
+                />
+              </div>
 
-              {images.length > 1 && (
-                <>
-                  <button
-                    type="button"
-                    className="lb-arrow prev"
-                    onClick={() => {
-                      setIsPlaying(false);
-                      setIsZoomed(false);
-                      prev();
-                    }}
-                    aria-label="Previous"
-                  >
-                    ‹
-                  </button>
-                  <button
-                    type="button"
-                    className="lb-arrow next"
-                    onClick={() => {
-                      setIsPlaying(false);
-                      setIsZoomed(false);
-                      next();
-                    }}
-                    aria-label="Next"
-                  >
-                    ›
-                  </button>
-                </>
-              )}
+              <button type="button" className="lb-arrow next" onClick={next} aria-label="Next image">
+                ›
+              </button>
             </div>
 
-            {/* Bottom */}
-            <div className="lightbox-bottom">
-              <div className="lightbox-bottom-row">
-                <p className="lightbox-desc">{description}</p>
+            <div className="lb-bottom">
+              <p className="lb-desc">{description}</p>
 
-                {/* ✅ Quote button INSIDE lightbox */}
+              <div className="lb-ctaRow">
                 <a
-                  className="lb-quote"
-                  href="#contact"
+                  className="lb-ctaPrimary"
+                  href={requestQuoteHref}
                   onClick={() => {
-                    quoteProject();
-                    closeLightbox();
+                    // close modal then go to contact smoothly
+                    close();
+                    setTimeout(() => {
+                      const el = document.getElementById("contact");
+                      el?.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }, 60);
                   }}
                 >
                   Request Quote for this project
                 </a>
+
+                <button type="button" className="lb-ctaGhost" onClick={close}>
+                  View less
+                </button>
               </div>
 
-              {images.length > 1 && (
-                <div className="lightbox-thumbs" aria-label="Thumbnails">
-                  {images.map((src, tIdx) => (
-                    <button
-                      key={`${openId}-t-${tIdx}`}
-                      type="button"
-                      className={`lb-thumb ${tIdx === idx ? "active" : ""}`}
-                      onClick={() => {
-                        setIsPlaying(false);
-                        setIsZoomed(false);
-                        setIdx(tIdx);
-                      }}
-                      aria-label={`View image ${tIdx + 1}`}
-                    >
-                      <Image src={src} alt="thumbnail" width={92} height={62} placeholder="blur" blurDataURL={BLUR_DATA_URL} />
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {images.length > 1 && (
-                <div className="lightbox-tip">
-                  Swipe left/right on mobile • ← → keys • Space Play/Pause • Z Zoom • Esc Close
-                </div>
-              )}
+              <p className="lb-hint">Tip: Swipe on mobile • Use ← → keys • Esc to close</p>
             </div>
           </div>
         </div>
       )}
-    </>
+    </section>
   );
 }

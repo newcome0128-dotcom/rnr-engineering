@@ -7,11 +7,11 @@ export default function AboutSection() {
 
 
   return (
-    <section id="about" ref={ref} className="reveal">
+    <section id="about" ref={ref} className="reveal about">
       <div className="container">
         <div className="section-header">
           <span className="kicker">Who we are</span>
-          <h2 style={{ marginTop: 12 }}>About RNR Engineering Services</h2>
+          <h2>About RNR Engineering Services</h2>
           <p>
             We deliver reliable engineering services and supplies for commercial,
             industrial, and residential projects—focused on safety, quality, and
@@ -21,7 +21,7 @@ export default function AboutSection() {
 
         <div className="about-grid">
           <div className="about-card">
-            <h3 style={{ marginBottom: 10 }}>Built for real-world execution</h3>
+            <h3>Built for real-world execution</h3>
             <p>
               From design and construction to HVAC, controls, FDAS, and structured
               cabling, we support your project from planning to turnover with
@@ -33,9 +33,7 @@ export default function AboutSection() {
                 <span className="dot" />
                 <div>
                   <strong>Safety-first delivery</strong>
-                  <p style={{ marginTop: 4 }}>
-                    Compliance-focused work practices and proper site execution.
-                  </p>
+                  <p>Compliance-focused work practices and proper site execution.</p>
                 </div>
               </div>
 
@@ -43,9 +41,7 @@ export default function AboutSection() {
                 <span className="dot" />
                 <div>
                   <strong>End-to-end support</strong>
-                  <p style={{ marginTop: 4 }}>
-                    Services + supplies in one place—faster timelines and fewer vendors.
-                  </p>
+                  <p>Services + supplies in one place—fewer vendors, faster timelines.</p>
                 </div>
               </div>
 
@@ -53,9 +49,7 @@ export default function AboutSection() {
                 <span className="dot" />
                 <div>
                   <strong>Clean, professional results</strong>
-                  <p style={{ marginTop: 4 }}>
-                    Quality workmanship with attention to details and durability.
-                  </p>
+                  <p>Quality workmanship with attention to details and durability.</p>
                 </div>
               </div>
             </div>

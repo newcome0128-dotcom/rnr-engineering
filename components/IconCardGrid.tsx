@@ -1,128 +1,111 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 export type IconCard = {
   id: string;
   title: string;
   description: string;
   image: string;
+  details?: string; // ✅ optional extra text for "Learn more"
 };
 
-export default function IconCardGrid({ items }: { items: IconCard[] }) {
+export default function IconCardGrid({
+  items,
+  expandable = false,
+}: {
+  items: IconCard[];
+  expandable?: boolean;
+}) {
   const [openId, setOpenId] = useState<string | null>(null);
+const cardRefs = useRef<Record<string, HTMLElement | null>>({});
 
-  const gridRef = useRef<HTMLDivElement | null>(null);
-  const cardRefs = useRef<Record<string, HTMLElement | null>>({});
-  const descRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-  const close = () => setOpenId(null);
-
-  const toggle = (id: string) => {
-    setOpenId((prev) => (prev === id ? null : id)); // hard-lock: only one can be open
-  };
-
-  // Scroll opened card to center
+  // Close when clicking outside
   useEffect(() => {
-    if (!openId) return;
-    const el = cardRefs.current[openId];
-    if (!el) return;
-
-    requestAnimationFrame(() => {
-      el.scrollIntoView({ behavior: "smooth", block: "center" });
-    });
-  }, [openId]);
-
-  // Click outside closes
-  useEffect(() => {
-    const onPointerDown = (e: MouseEvent) => {
+    const onDown = (e: MouseEvent) => {
       if (!openId) return;
-      const grid = gridRef.current;
-      if (!grid) return;
-
-      const t = e.target as Node;
-      if (!grid.contains(t)) close();
+      const card = cardRefs.current[openId];
+      if (!card) return;
+      if (!card.contains(e.target as Node)) setOpenId(null);
     };
-
-    document.addEventListener("mousedown", onPointerDown);
-    return () => document.removeEventListener("mousedown", onPointerDown);
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
   }, [openId]);
 
-  // ESC closes (keyboard accessibility)
+  // Keyboard ESC closes
   useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") close();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpenId(null);
     };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
   }, []);
 
-  // Smooth height animation (max-height) for descriptions
-  useEffect(() => {
-    items.forEach((item) => {
-      const isOpen = openId === item.id;
-      const el = descRefs.current[item.id];
-      if (!el) return;
-
-      // set maxHeight to animate
-      if (isOpen) {
-        const target = el.scrollHeight;
-        el.style.maxHeight = `${target}px`;
-      } else {
-        el.style.maxHeight = "0px";
-      }
-    });
-  }, [openId, items]);
+  const hasDetails = useMemo(
+    () => expandable && items.some((x) => (x.details ?? "").trim().length > 0),
+    [expandable, items]
+  );
 
   return (
-    <div ref={gridRef} className="supplies-grid">
+    <div className="supplies-grid">
       {items.map((item) => {
         const isOpen = openId === item.id;
 
         return (
-          <article
-            key={item.id}
-            ref={(el) => {
-              cardRefs.current[item.id] = el;
-            }}
-            className={`supply-card icon-card ${isOpen ? "is-open" : ""}`}
-          >
-            <button
-              type="button"
-              className="icon-card-btn"
-              onClick={() => toggle(item.id)}
-              aria-expanded={isOpen}
-            >
-              <div className={`supply-icon icon-badge ${isOpen ? "open" : ""}`}>
+<article
+  key={item.id}
+  className={`supply-card ${hasDetails ? "service-card" : ""} ${isOpen ? "open" : ""}`}
+  ref={(el) => {
+    cardRefs.current[item.id] = el;
+  }}
+  tabIndex={hasDetails ? 0 : -1}
+  onKeyDown={(e) => {
+    if (!hasDetails) return;
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      setOpenId(isOpen ? null : item.id);
+    }
+  }}
+>
+            <div className="card-head">
+              <div className="supply-icon">
                 <Image
                   src={item.image}
                   alt={item.title}
                   fill
                   sizes="56px"
                   className="icon-img"
-                  loading="lazy"
                 />
               </div>
 
               <div className="supply-body">
                 <h3>{item.title}</h3>
+                <p>{item.description}</p>
 
-                {/* animated description wrapper */}
-                <div
-                  ref={(el) => {
-                    descRefs.current[item.id] = el;
-                  }}
-                  className="icon-desc-wrap"
-                >
-                  <p className="icon-desc-text">{item.description}</p>
-                </div>
-
-                <span className="icon-hint" aria-hidden="true">
-                  {isOpen ? "View less" : "View details"}
-                </span>
+                {/* Learn more button only for Services */}
+                {hasDetails && (
+                  <button
+                    type="button"
+                    className="learn-more"
+                    onClick={() => setOpenId(isOpen ? null : item.id)}
+                    aria-expanded={isOpen}
+                  >
+                    {isOpen ? "View less" : "Learn more"}
+                  </button>
+                )}
               </div>
-            </button>
+            </div>
+
+            {/* Expandable details */}
+            {hasDetails && (
+              <div className={`card-expand ${isOpen ? "show" : ""}`}>
+                <div className="card-expand-inner">
+                  <p>{item.details}</p>
+                </div>
+              </div>
+            )}
           </article>
         );
       })}

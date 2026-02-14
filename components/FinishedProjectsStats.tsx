@@ -1,40 +1,38 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import type { FinishedProjectStat } from "@/data/finishedProjects";
+import useRevealOnScroll from "@/hooks/useRevealOnScroll";
 
-export default function FinishedProjectsStats({ items }: { items: FinishedProjectStat[] }) {
-  const [show, setShow] = useState(false);
+type Stat = { label: string; value: string };
 
-  // pop-up animation when scrolled into view (simple + Lighthouse friendly)
-  useEffect(() => {
-    const el = document.getElementById("finished-stats");
-    if (!el) return;
+const STATS: Stat[] = [
+  { label: "Finished Projects", value: "120+" },
+  { label: "Sites Served", value: "50+" },
+  { label: "Years Experience", value: "2+" },
+  { label: "Repeat Clients", value: "30+" },
+  { label: "On-time Delivery", value: "95%" },
+];
 
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setShow(true);
-          obs.disconnect();
-        }
-      },
-      { threshold: 0.15 }
-    );
-
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
+export default function FinishedProjectsStats() {
+  const ref = useRevealOnScroll<HTMLElement>();
 
   return (
-    <div id="finished-stats" className={`stats-wrap ${show ? "show" : ""}`}>
-      <div className="stats-grid">
-        {items.map((s) => (
-          <div key={s.id} className="stat-card">
-            <div className="stat-number">{s.value}</div>
-            <div className="stat-label">{s.label}</div>
-          </div>
-        ))}
+    <section ref={ref} className="reveal stats-section" aria-label="Finished projects statistics">
+      <div className="container">
+        <div className="section-header">
+          <span className="kicker">Track record</span>
+          <h2>Finished Projects</h2>
+          <p>Real output delivered for commercial, industrial, and residential clients.</p>
+        </div>
+
+        <div className="stats-grid">
+          {STATS.map((s) => (
+            <div className="stat-card" key={s.label}>
+              <div className="stat-number">{s.value}</div>
+              <div className="stat-label">{s.label}</div>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   );
 }

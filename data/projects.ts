@@ -4,15 +4,24 @@ export type Project = {
   id: string;
   title: string;
   description: string;
+  images: string[];
   category: ProjectCategory;
-  images: string[]; // files inside /public
 };
+
+export const finishedProjectStats = [
+  { label: "Finished Projects", value: "120+" },
+  { label: "Sites Served", value: "50+" },
+  { label: "Years Experience", value: "8+" },
+  { label: "Repeat Clients", value: "30+" },
+  { label: "On-time Delivery", value: "95%" },
+];
+
 
 export const projects: Project[] = [
   {
     id: "residential-01",
     title: "Residential Projects",
-    description:
+     description:
       "Residential construction and renovation projects delivered with quality workmanship, efficient project management, and long-lasting structural performance.",
     category: "construction",
     images: [

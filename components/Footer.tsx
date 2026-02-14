@@ -1,24 +1,36 @@
-"use client";
-import { FacebookIcon } from "@/components/icons";
+import ContactQuick from "@/components/ContactQuick";
+import { FacebookIcon, MailIcon } from "@/components/icons";
 
 export default function Footer() {
+  const FACEBOOK_URL = "https://www.facebook.com/profile.php?id=61565551777683";
+  const GMAIL_ADDRESS = "alvin.3dcc@gmail.com";
+  const PHONE = "+639383636340";
+
   return (
     <footer className="footer">
       <div className="footer-inner">
-        <div>
-          © {2024} <strong>RNR Engineering Services</strong>.  
-          All rights reserved.
-        </div>
+        <p>
+          © {new Date().getFullYear()} <strong>RNR Engineering Services</strong>. All rights reserved.
+        </p>
 
-        <div className="footer-social">
-          <span>Follow us on</span>
-<a className="footer-fb" href="https://www.facebook.com/profile.php?id=61565551777683" target="_blank" rel="noreferrer">
-          <span className="icon-inline" aria-hidden="true"><FacebookIcon size={18} /></span>
-          RNR Engineering Services (Facebook)</a>
+        {/* ✅ copy-to-clipboard + icons */}
+        <ContactQuick email={GMAIL_ADDRESS} phone={PHONE} />
+
+        <div className="footer-links">
+          <a
+            className="footer-link"
+            href={FACEBOOK_URL}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="RNR Engineering Services Facebook page"
+          >
+            <span className="icon-inline" aria-hidden="true">
+              <FacebookIcon size={18} />
+            </span>
+            RNR Engineering Services
+          </a>
         </div>
       </div>
     </footer>
   );
 }
-
-

@@ -1,15 +1,14 @@
 import Navbar from "@/components/Navbar";
 import AboutSection from "@/components/AboutSection";
+import HighlightsSection from "@/components/HighlightsSection";
 import ServicesSection from "@/components/ServicesSection";
+import ProcessSection from "@/components/ProcessSection";
 import SuppliesSection from "@/components/SuppliesSection";
 import ProjectsSection from "@/components/ProjectsSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 
-import HighlightsSection from "@/components/HighlightsSection";
-import ProcessSection from "@/components/ProcessSection";
-import ContactStrip from "@/components/ContactStrip";
-import StickyContactBar from "@/components/StickyContactBar";
+
 export default function Page() {
   return (
     <>
@@ -24,6 +23,7 @@ export default function Page() {
             with safety, quality, and professionalism.
           </p>
 
+          {/* ✅ Clean only (no “Need a quote today”, no “Chat on Viber”) */}
           <div
             style={{
               display: "flex",
@@ -35,6 +35,9 @@ export default function Page() {
             <a className="btn-primary" href="#services">
               Our Services
             </a>
+            <a className="btn-secondary" href="#projects">
+              View Projects
+            </a>
             <a className="btn-secondary" href="#contact">
               Get a Quote
             </a>
@@ -42,26 +45,16 @@ export default function Page() {
         </div>
       </header>
 
-      {/* ✅ CTA strip right after hero */}
-      <ContactStrip />
-
       <AboutSection />
-
-      {/* ✅ What sets us apart */}
       <HighlightsSection />
-
       <ServicesSection />
-
-      {/* ✅ Process section */}
       <ProcessSection />
-
       <SuppliesSection />
       <ProjectsSection />
       <ContactSection />
       <Footer />
 
-      {/* ✅ Mobile sticky contact bar */}
-      <StickyContactBar />
+
     </>
   );
 }

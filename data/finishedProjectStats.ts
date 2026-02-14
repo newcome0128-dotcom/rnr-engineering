@@ -1,13 +1,13 @@
-// data/finishedProjects.ts
+// data/finishedProjectStats.ts
 
 export type Stat = {
   label: string;
-  value: number;
-  suffix?: string;
+  value: number;      // numeric for count-up animation
+  suffix?: string;    // "+", "%"
 };
 
 export type StatGroup = {
-  title: string;
+  title: string;      // section title (not a tab)
   subtitle?: string;
   stats: Stat[];
 };

@@ -1,8 +1,15 @@
 "use client";
-import { ViberIcon } from "@/components/icons";
+
 import { useMemo, useState } from "react";
+import { ViberIcon } from "@/components/icons";
 
 export default function ContactSection() {
+  const VIBER_NUMBER = "639383636340"; // no +
+
+  const viberLink = useMemo(() => {
+    return `viber://chat?number=${VIBER_NUMBER}`;
+  }, []);
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -10,10 +17,10 @@ export default function ContactSection() {
     message: "",
   });
 
-  const [status, setStatus] = useState<{ type: "idle" | "success" | "error"; msg: string }>({
-    type: "idle",
-    msg: "",
-  });
+  const [status, setStatus] = useState<{
+    type: "idle" | "success" | "error";
+    msg: string;
+  }>({ type: "idle", msg: "" });
 
   const errors = useMemo(() => {
     const e: Record<string, string> = {};
@@ -26,31 +33,13 @@ export default function ContactSection() {
 
   const isValid = Object.keys(errors).length === 0;
 
-  // ✅ Put your real number here (PH format)
-const VIBER_NUMBER = "639383636340"; 
-const viberLink = `viber://chat?number=${VIBER_NUMBER}`;
-
-
-
-  const whatsappLink = useMemo(() => {
-    const text = encodeURIComponent(
-      `Hi RNR Engineering Services, I'd like to request a quote.\n\nName: ${form.name}\nEmail: ${form.email}\nPhone: ${form.phone}\n\nDetails: ${form.message}`
-    );
-    const viberLink = `viber://chat?number=${639383636340}`;
-  }, [form, VIBER_NUMBER]);
-
-  async function onSubmit(e: React.FormEvent) {
+  function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setStatus({ type: "idle", msg: "" });
-
     if (!isValid) {
       setStatus({ type: "error", msg: "Please fix the highlighted fields and try again." });
       return;
     }
-
-    // ✅ Lightweight: client-side “success” for now.
-    // If you later want a real email sender, we can add a /api/contact route.
-    setStatus({ type: "success", msg: "Message ready. Choose Email or Viber to send." });
+    setStatus({ type: "success", msg: "Details validated. You can send via Viber now." });
   }
 
   return (
@@ -59,18 +48,16 @@ const viberLink = `viber://chat?number=${VIBER_NUMBER}`;
         <div className="contact-header">
           <span className="kicker">Get in touch</span>
           <h2>Request a Quote</h2>
-          <p>Chat with us directly on Viber or send us a message.</p>
+          <p>Send your project details and we’ll respond as soon as possible.</p>
         </div>
 
+        {/* ✅ One clean CTA */}
         <div className="contact-cta-row">
-<a className="cta-btn cta-primary" href={viberLink}>
-  <span className="icon-inline" aria-hidden="true">
-    <ViberIcon size={18} />
-  </span>
-  Chat on Viber
-</a>
-                    <a className="cta-btn cta-ghost" href={`mailto:your@email.com?subject=Quote Request - RNR Engineering Services`}>
-            Email Us
+          <a className="cta-btn cta-primary" href={viberLink}>
+            <span className="icon-inline" aria-hidden="true">
+              <ViberIcon size={18} />
+            </span>
+            Chat on Viber
           </a>
         </div>
 
@@ -127,42 +114,20 @@ const viberLink = `viber://chat?number=${VIBER_NUMBER}`;
           </div>
 
           <div className="contact-actions">
-            <button className="contact-btn" type="submit">
-              Validate Details
-            </button>
-<p style={{ fontSize: 13, opacity: 0.75, marginTop: 6 }}>
-  Opens Viber app if installed.
-</p>
-            <div
-              className={`contact-status ${
-                status.type === "success" ? "success" : status.type === "error" ? "error" : ""
-              }`}
-            >
+            <button className="contact-btn" type="submit">Validate Details</button>
+
+            <div className={`contact-status ${status.type === "success" ? "success" : status.type === "error" ? "error" : ""}`}>
               {status.msg}
             </div>
           </div>
 
-          {/* CTA after validation */}
           <div className="contact-submit-row">
             <a
-  className={`btn-primary ${isValid ? "" : "disabled"}`}
-  href={isValid ? viberLink : "#"}
-  onClick={(e) => !isValid && e.preventDefault()}
->
-  Send via Viber
-</a>
-            <a
-              className={`btn-secondary ${isValid ? "" : "disabled"}`}
-              href={
-                isValid
-                  ? `mailto:your@email.com?subject=${encodeURIComponent("Quote Request - RNR Engineering Services")}&body=${encodeURIComponent(
-                      `Name: ${form.name}\nEmail: ${form.email}\nPhone: ${form.phone}\n\nDetails:\n${form.message}\n`
-                    )}`
-                  : "#"
-              }
+              className={`btn-primary ${isValid ? "" : "disabled"}`}
+              href={isValid ? viberLink : "#"}
               onClick={(e) => !isValid && e.preventDefault()}
             >
-              Send via Email
+              Send via Viber
             </a>
           </div>
         </form>

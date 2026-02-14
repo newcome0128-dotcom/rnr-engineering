@@ -14,15 +14,14 @@ export default function ServicesSection() {
         <p>Engineering solutions delivered with quality workmanship.</p>
       </div>
 
-      {serviceGroups.map((group) => (
-        <div key={group.id} style={{ marginBottom: 50 }}>
-          <div className="service-group-header">
-            <h3>{group.title}</h3>
-            <p>{group.subtitle}</p>
-          </div>
+{serviceGroups.map((group) => (
+  <div key={group.id} className="service-group">
+    <div className="service-group-header">
+      <h3>{group.title}</h3>
+      <p>{group.subtitle}</p>
+    </div>
 
-          {/* expandable version */}
-          <IconCardGrid items={group.items} expandable />
+    <IconCardGrid items={group.items} expandable />
         </div>
       ))}
     </section>
