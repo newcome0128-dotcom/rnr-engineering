@@ -1,7 +1,8 @@
 "use client";
 
-import Image from "next/image";
+import NextImage from "next/image";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 const LINKS = [
   { id: "home", label: "Home" },
@@ -27,7 +28,6 @@ export default function Navbar() {
     document.body.classList.toggle("dark", shouldBeDark);
   }, []);
 
-  // Close mobile panel on resize
   useEffect(() => {
     const onResize = () => {
       if (window.innerWidth > 768) setMobileOpen(false);
@@ -36,7 +36,6 @@ export default function Navbar() {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  // Close mobile panel when clicking any link
   const goTo = (id: string) => {
     setMobileOpen(false);
     setActiveId(id);
@@ -50,18 +49,18 @@ export default function Navbar() {
     localStorage.setItem("theme", next ? "dark" : "light");
   };
 
-  // Highlight current section on scroll (lightweight)
   useEffect(() => {
-    const ids = LINKS.map((l) => l.id);
-    const els = ids
-      .map((id) => document.getElementById(id))
-      .filter(Boolean) as HTMLElement[];
+    const els = LINKS.map((l) => document.getElementById(l.id)).filter(
+      Boolean
+    ) as HTMLElement[];
 
     const obs = new IntersectionObserver(
       (entries) => {
         const visible = entries
           .filter((e) => e.isIntersecting)
-          .sort((a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0))[0];
+          .sort(
+            (a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0)
+          )[0];
 
         if (visible?.target?.id) setActiveId(visible.target.id);
       },
@@ -74,36 +73,49 @@ export default function Navbar() {
 
   return (
     <>
-      <div className="navbar">
+      <nav className="navbar">
         <div className="nav-container">
-          <a href="#home" className="brand" onClick={(e) => (e.preventDefault(), goTo("home"))}>
-            <div className="logo-wrap">
-              <Image
-                src="/images/logo.png"
+          <Link
+            href="#home"
+            className="brand"
+            aria-label="RNR Engineering Services home"
+            onClick={(e) => {
+              e.preventDefault();
+              goTo("home");
+            }}
+          >
+            {/* ✅ MUST match CSS: .logoBox */}
+            <span className="logoBox" aria-hidden="true">
+              <NextImage
+                src="/logo.png"
                 alt="RNR Engineering Services"
                 fill
+                sizes="48px"
                 priority
-                className="logo-img"
+                style={{ objectFit: "contain" }}
               />
-            </div>
-          </a>
+            </span>
 
-          {/* Desktop nav */}
-          <nav className="nav-desktop" aria-label="Primary navigation">
-            {LINKS.map((l) => (
-              <a
-                key={l.id}
-                className={`nav-link ${activeId === l.id ? "active" : ""}`}
-                href={`#${l.id}`}
-                onClick={(e) => (e.preventDefault(), goTo(l.id))}
-              >
-                {l.label}
-              </a>
-            ))}
-          </nav>
+            <span className="brandText">RNR Engineering</span>
+          </Link>
 
-          {/* Actions */}
           <div className="nav-actions">
+            <nav className="nav-desktop" aria-label="Primary navigation">
+              {LINKS.map((l) => (
+                <a
+                  key={l.id}
+                  className={`nav-link ${activeId === l.id ? "active" : ""}`}
+                  href={`#${l.id}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    goTo(l.id);
+                  }}
+                >
+                  {l.label}
+                </a>
+              ))}
+            </nav>
+
             <button
               className="hamburger"
               type="button"
@@ -127,16 +139,22 @@ export default function Navbar() {
             </button>
           </div>
         </div>
-      </div>
+      </nav>
 
-      {/* Mobile panel */}
-      <div className={`mobile-panel ${mobileOpen ? "open" : ""}`} role="dialog" aria-label="Mobile menu">
+      <div
+        className={`mobile-panel ${mobileOpen ? "open" : ""}`}
+        role="dialog"
+        aria-label="Mobile menu"
+      >
         {LINKS.map((l) => (
           <a
             key={l.id}
             className="mobile-link"
             href={`#${l.id}`}
-            onClick={(e) => (e.preventDefault(), goTo(l.id))}
+            onClick={(e) => {
+              e.preventDefault();
+              goTo(l.id);
+            }}
           >
             {l.label}
           </a>

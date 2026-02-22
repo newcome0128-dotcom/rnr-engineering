@@ -43,15 +43,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <head>
-        <link
-          rel="preload"
-          as="image"
-          href="/images/backgrounds/site-bg.webp"
-          type="image/webp"
-        />
-      </head>
+    <html lang="en" suppressHydrationWarning>
+<head>
+  <link
+    rel="preload"
+    as="image"
+    href="/images/backgrounds/hero-bg.webp"
+    type="image/webp"
+  />
+</head>
       <body>{children}</body>
     </html>
   );

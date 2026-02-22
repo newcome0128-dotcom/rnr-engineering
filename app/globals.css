@@ -20,7 +20,7 @@
   --text-muted: #555;
 
   /* Background image */
-  --site-bg: url("/images/backgrounds/site-bg.webp");
+--site-bg: url("/images/hero-bg.jpg");
 }
 
 /* =========================
@@ -287,10 +287,12 @@ section {
   margin-bottom: 15px;
 }
 
-.hero p {
-  font-size: clamp(1.02rem, 1.4vw, 1.15rem);
-  opacity: 0.92;
-  margin-bottom: 26px;
+.hero-content p {
+  margin: 0 auto 22px;
+  max-width: 720px;
+  font-size: 18px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.88); /* ✅ FIX */
 }
 
 /* =========================
@@ -327,7 +329,9 @@ section {
    ========================= */
 .section-header {
   text-align: center;
-  margin-bottom: 38px;
+  max-width: 860px;
+  margin: 0 auto 34px;
+  padding: 0; /* ✅ FIX: remove huge padding */
 }
 
 .section-header h2 {
