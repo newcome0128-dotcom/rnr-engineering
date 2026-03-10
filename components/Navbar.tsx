@@ -1,6 +1,6 @@
 "use client";
 
-import NextImage from "next/image";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
@@ -58,9 +58,7 @@ export default function Navbar() {
       (entries) => {
         const visible = entries
           .filter((e) => e.isIntersecting)
-          .sort(
-            (a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0)
-          )[0];
+          .sort((a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0))[0];
 
         if (visible?.target?.id) setActiveId(visible.target.id);
       },
@@ -84,9 +82,9 @@ export default function Navbar() {
               goTo("home");
             }}
           >
-            {/* ✅ MUST match CSS: .logoBox */}
+            {/* ✅ MUST MATCH CSS .logoBox */}
             <span className="logoBox" aria-hidden="true">
-              <NextImage
+              <Image
                 src="/logo.png"
                 alt="RNR Engineering Services"
                 fill
