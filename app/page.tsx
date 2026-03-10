@@ -17,7 +17,7 @@ export default function Page() {
       {/* HOME / HERO */}
       <header id="home" className="hero">
         <div className="hero-content">
-          <h1>RNR Engineering Services</h1>
+          <h1>RNR Engineering Services and Supplies</h1>
           <p>
             Civil, Mechanical, Electrical Works & General Supplies — delivered
             with safety, quality, and professionalism.
@@ -32,7 +32,7 @@ export default function Page() {
               flexWrap: "wrap",
             }}
           >
-            <a className="btn-primary" href="#services">
+            <a className="btn-secondary" href="#services">
               Our Services
             </a>
             <a className="btn-secondary" href="#projects">

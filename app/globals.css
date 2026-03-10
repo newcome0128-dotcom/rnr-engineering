@@ -297,60 +297,45 @@ section {
 
 .hero-actions {
   display: flex;
-  gap: 14px;
+  gap: 18px;
   justify-content: center;
   flex-wrap: wrap;
-  margin-top: 10px;
+  margin-top: 14px;
 }
 
 /* =========================
    BUTTONS
    ========================= */
-.btn-primary,
 .btn-secondary {
   min-width: 290px;
   height: 74px;
   padding: 0 34px;
+
   border-radius: 999px;
   font-weight: 800;
   font-size: 20px;
   line-height: 1;
+
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  box-sizing: border-box;
+
+  color: #fff;
+  border: 2px solid var(--accent);
+
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(4px);
+
   transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
 }
 
-.btn-primary {
-  background: var(--accent);
-  color: #111;
-  border: 2px solid var(--accent);
-}
-
-.btn-secondary {
-  background: rgba(255, 255, 255, 0.04);
-  color: #fff;
-  border: 2px solid var(--accent);
-  backdrop-filter: blur(4px);
-}
-
-.btn-primary:hover,
 .btn-secondary:hover {
   transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.08);
 }
 
-@media (max-width: 768px) {
-  .btn-primary,
-  .btn-secondary {
-    min-width: 240px;
-    height: 62px;
-    font-size: 18px;
-    padding: 0 24px;
-  }
-}
+
 /* =========================
    SECTION HEADER
    ========================= */
