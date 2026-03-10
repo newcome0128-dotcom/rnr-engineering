@@ -20,7 +20,7 @@
   --text-muted: #555;
 
   /* Background image */
---site-bg: url("/images/hero-bg.jpg");
+--site-bg: url("/images/hero-bg.webp");
 }
 
 /* =========================

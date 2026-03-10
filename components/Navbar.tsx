@@ -84,14 +84,13 @@ export default function Navbar() {
           >
             {/* ✅ MUST MATCH CSS .logoBox */}
             <span className="logoBox" aria-hidden="true">
-              <Image
-                src="/logo.png"
-                alt="RNR Engineering Services"
-                fill
-                sizes="48px"
-                priority
-                style={{ objectFit: "contain" }}
-              />
+<Image
+  src="/logo.png"
+  alt="RNR Engineering Services"
+  width={150}
+  height={50}
+  priority
+/>
             </span>
 
             <span className="brandText">RNR Engineering</span>
