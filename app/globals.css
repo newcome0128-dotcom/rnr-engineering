@@ -268,9 +268,12 @@ section {
    HERO
    ========================= */
 .hero {
-  min-height: 92vh;
-  background: linear-gradient(rgba(20, 33, 61, 0.85), rgba(20, 33, 61, 0.85)),
-    var(--site-bg) center / cover no-repeat;
+  min-height: 72vh;
+
+  background:
+    linear-gradient(rgba(20,33,61,0.75), rgba(0,0,0,0.75)),
+    url("/images/backgrounds/hero-bg.webp") center / cover no-repeat;
+
   display: flex;
   align-items: center;
   justify-content: center;
