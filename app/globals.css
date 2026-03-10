@@ -759,23 +759,58 @@ section {
   resize: vertical;
 }
 
+/* CONTACT BUTTONS FIX */
 .contact-actions {
   display: flex;
-  gap: 12px;
+  gap: 14px;
+  justify-content: center;
   flex-wrap: wrap;
-  margin-top: 8px;
+  margin-top: 14px;
 }
 
-.error-text {
-  color: #c62828;
-  font-size: 0.92rem;
-  margin-top: 6px;
+/* SAME STYLE BOTH BUTTONS */
+.contact-actions button {
+  appearance: none;
+  border: none;
+  outline: none;
+
+  min-width: 220px;
+  height: 60px;
+  padding: 0 28px;
+
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 17px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  transition: all 0.18s ease;
 }
 
-body.dark .error-text {
-  color: #ff8a80;
+/* VIBER BUTTON */
+.btn-viber {
+  background: #7360f2;
+  color: #fff;
 }
 
+.btn-viber:hover {
+  transform: translateY(-1px);
+  background: #6753ea;
+}
+
+/* EMAIL BUTTON */
+.btn-email {
+  background: var(--accent);
+  color: var(--navy);
+}
+
+.btn-email:hover {
+  transform: translateY(-1px);
+  background: #ffb733;
+}
 /* =========================
    FOOTER + COPY TO CLIPBOARD
    ========================= */
