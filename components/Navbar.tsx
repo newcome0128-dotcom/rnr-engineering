@@ -86,8 +86,7 @@ export default function Navbar() {
             <span className="logoBox" aria-hidden="true">
 <Image
   src="/logo.png"
-  alt="RNR Engineering Services"
-  width={150}
+  width={100}
   height={50}
   priority
 />
