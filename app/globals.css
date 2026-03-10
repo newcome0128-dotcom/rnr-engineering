@@ -792,13 +792,13 @@ section {
 
 /* VIBER BUTTON */
 .btn-viber {
-  background: #7360f2;
-  color: #fff;
+  background: var(--accent);
+  color: var(--navy);
 }
 
 .btn-viber:hover {
   transform: translateY(-1px);
-  background: #6753ea;
+  background: #ffb733;
 }
 
 /* EMAIL BUTTON */

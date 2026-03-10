@@ -166,23 +166,23 @@ export default function ContactSection() {
               {errors.details && <p className="error-text">{errors.details}</p>}
             </div>
 
-            <div className="contact-actions">
-              <button
-                type="button"
-                className="btn-secondary"
-                onClick={handleSendViber}
-              >
-                Send via Viber
-              </button>
+<div className="contact-actions">
+  <button
+    type="button"
+    className="btn-viber"
+    onClick={handleSendViber}
+  >
+    Send via Viber
+  </button>
 
-              <button
-                type="button"
-                className="btn-primary"
-                onClick={handleSendEmail}
-              >
-                Send via Email
-              </button>
-            </div>
+  <button
+    type="button"
+    className="btn-email"
+    onClick={handleSendEmail}
+  >
+    Send via Email
+  </button>
+</div>
           </form>
         </div>
       </div>
