@@ -3,7 +3,7 @@ export default function Hero() {
     <section id="hero" className="hero scroll-reveal">
       <div className="hero-content">
         <img
-          src="/images/LOGO.png"
+          src="/images/logo.png"
           alt="RNR Engineering Services Logo"
           style={{ width: 140, marginBottom: 20 }}
         />

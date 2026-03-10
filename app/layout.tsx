@@ -44,14 +44,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <link
-          rel="preload"
-          as="image"
-          href="/images/backgrounds/hero-bg.webp"
-          type="image/webp"
-        />
-      </head>
+<head>
+  <link
+    rel="preload"
+    as="image"
+    href="/images/backgrounds/site-bg.webp"
+    type="image/webp"
+  />
+</head>
       <body>{children}</body>
     </html>
   );

@@ -6,21 +6,20 @@
    COLOR PALETTE / CSS VARS
    ========================= */
 :root {
-  --black: #000;
-  --navy: #14213d;
-  --accent: #fca311;
-  --gray: #e5e5e5;
-  --white: #fff;
-
-  --nav-h: 76px;
-
-  --bg-main: var(--white);
-  --bg-alt: var(--gray);
-  --text-main: var(--navy);
-  --text-muted: #555;
-
-  --site-bg: url("/images/backgrounds/hero-bg.webp");
+  --site-bg: url("/images/backgrounds/site-bg.webp");
 }
+
+.hero {
+  min-height: 72vh;
+  background:
+    linear-gradient(rgba(20,33,61,0.75), rgba(0,0,0,0.75)),
+    var(--site-bg) center / cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
 /* =========================
    RESET / BASE
    ========================= */
