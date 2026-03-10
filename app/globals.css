@@ -295,38 +295,62 @@ section {
   color: rgba(255, 255, 255, 0.88); /* ✅ FIX */
 }
 
+.hero-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
 /* =========================
    BUTTONS
    ========================= */
 .btn-primary,
 .btn-secondary {
-  padding: 14px 34px;
-  border-radius: 30px;
+  min-width: 290px;
+  height: 74px;
+  padding: 0 34px;
+  border-radius: 999px;
   font-weight: 800;
+  font-size: 20px;
+  line-height: 1;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: none;
   cursor: pointer;
-  min-width: 210px;
+  box-sizing: border-box;
+  transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
 }
 
 .btn-primary {
   background: var(--accent);
-  color: var(--navy);
+  color: #111;
+  border: 2px solid var(--accent);
 }
 
 .btn-secondary {
-  background: transparent;
+  background: rgba(255, 255, 255, 0.04);
   color: #fff;
-  border: 2px solid rgba(252, 163, 17, 0.9);
+  border: 2px solid var(--accent);
+  backdrop-filter: blur(4px);
 }
 
+.btn-primary:hover,
 .btn-secondary:hover {
-  background: rgba(252, 163, 17, 0.12);
+  transform: translateY(-1px);
 }
 
+@media (max-width: 768px) {
+  .btn-primary,
+  .btn-secondary {
+    min-width: 240px;
+    height: 62px;
+    font-size: 18px;
+    padding: 0 24px;
+  }
+}
 /* =========================
    SECTION HEADER
    ========================= */
