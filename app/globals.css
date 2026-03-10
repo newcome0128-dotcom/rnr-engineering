@@ -119,10 +119,12 @@ section {
   text-decoration: none;
 }
 
-.logo-wrap {
+.logoBox {
   position: relative;
-  width: 150px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  overflow: hidden;
 }
 
 .logo-img {

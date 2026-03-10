@@ -73,27 +73,28 @@ export default function Navbar() {
     <>
       <nav className="navbar">
         <div className="nav-container">
-          <Link
-            href="#home"
-            className="brand"
-            aria-label="RNR Engineering Services home"
-            onClick={(e) => {
-              e.preventDefault();
-              goTo("home");
-            }}
-          >
-            {/* ✅ MUST MATCH CSS .logoBox */}
-            <span className="logoBox" aria-hidden="true">
-<Image
-  src="/logo.png"
-  width={100}
-  height={50}
-  priority
-/>
-            </span>
+<Link
+  href="#home"
+  className="brand"
+  aria-label="RNR Engineering Services home"
+  onClick={(e) => {
+    e.preventDefault();
+    goTo("home");
+  }}
+>
+  <span className="logoBox" aria-hidden="true">
+    <Image
+      src="/logo.png"
+      alt="RNR Engineering Services"
+      fill
+      sizes="42px"
+      priority
+      style={{ objectFit: "contain" }}
+    />
+  </span>
 
-            <span className="brandText">RNR Engineering</span>
-          </Link>
+  <span className="brandText">RNR Engineering</span>
+</Link>
 
           <div className="nav-actions">
             <nav className="nav-desktop" aria-label="Primary navigation">
