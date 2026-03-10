@@ -1460,3 +1460,106 @@ body.dark .stats-tab {
 body.dark .stats-subtitle {
   color: rgba(255,255,255,0.75);
 }
+
+/* =========================
+   CONTACT — DARK MODE FIX
+   Put at the very bottom
+   ========================= */
+
+/* keep the form card light so fields stay readable */
+body.dark .contact-form {
+  background: #f3f3f3;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* labels and helper text */
+body.dark .label {
+  color: #111;
+}
+
+body.dark .error-text {
+  color: #c62828;
+}
+
+/* inputs stay readable */
+body.dark .contact-form input,
+body.dark .contact-form textarea {
+  background: #fff;
+  color: #111;
+  border-color: rgba(20, 33, 61, 0.14);
+}
+
+body.dark .contact-form input::placeholder,
+body.dark .contact-form textarea::placeholder {
+  color: #777;
+}
+
+/* chat on viber link */
+body.dark .quick-link,
+body.dark .footer-link {
+  color: #fff;
+}
+
+/* contact action row */
+.contact-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+/* reset ugly browser defaults */
+.contact-actions button {
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  outline: none;
+  min-width: 220px;
+  height: 58px;
+  padding: 0 24px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 17px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+/* viber */
+.btn-viber {
+  background: #7360f2;
+  color: #fff;
+}
+
+.btn-viber:hover {
+  background: #6753ea;
+  transform: translateY(-1px);
+}
+
+/* email */
+.btn-email {
+  background: var(--accent);
+  color: #111;
+}
+
+.btn-email:hover {
+  background: #ffb733;
+  transform: translateY(-1px);
+}
+
+/* if you still use generic hero button classes inside contact */
+.contact-actions .btn-secondary {
+  background: #7360f2 !important;
+  color: #fff !important;
+  border: none !important;
+}
+
+.contact-actions .btn-primary {
+  background: var(--accent) !important;
+  color: #111 !important;
+  border: none !important;
+}
