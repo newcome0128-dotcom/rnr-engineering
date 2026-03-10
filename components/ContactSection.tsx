@@ -1,5 +1,6 @@
 "use client";
 
+import { Mail, MessageCircle, Loader2 } from "lucide-react";
 import { useState } from "react";
 
 type FormState = {
@@ -21,6 +22,7 @@ export default function ContactSection() {
   });
 
   const [errors, setErrors] = useState<Partial<FormState>>({});
+  const [loadingAction, setLoadingAction] = useState<"viber" | "email" | "chat" | null>(null);
 
   const updateField = (key: keyof FormState, value: string) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -64,30 +66,31 @@ export default function ContactSection() {
     ].join("\n");
   };
 
-  const handleViberChat = () => {
+  const handleViberChat = async () => {
+    setLoadingAction("chat");
     const url = `viber://chat?number=%2B${VIBER_NUMBER}`;
     window.location.href = url;
+    setTimeout(() => setLoadingAction(null), 800);
   };
 
-  const handleSendViber = () => {
+  const handleSendViber = async () => {
     if (!validate()) return;
 
+    setLoadingAction("viber");
     const message = encodeURIComponent(buildMessage());
-
-    // Viber deep link with message
     const url = `viber://forward?text=${message}`;
     window.location.href = url;
+    setTimeout(() => setLoadingAction(null), 800);
   };
 
-  const handleSendEmail = () => {
+  const handleSendEmail = async () => {
     if (!validate()) return;
 
-    const subject = encodeURIComponent(
-      `Quote Request from ${form.fullName}`
-    );
+    setLoadingAction("email");
+    const subject = encodeURIComponent(`Quote Request from ${form.fullName}`);
     const body = encodeURIComponent(buildMessage());
-
     window.location.href = `mailto:${EMAIL_TO}?subject=${subject}&body=${body}`;
+    setTimeout(() => setLoadingAction(null), 800);
   };
 
   return (
@@ -103,14 +106,20 @@ export default function ContactSection() {
           <div className="contact-quick">
             <button
               type="button"
-              className="quick-link"
+              className="quick-link quick-viber"
               onClick={handleViberChat}
+              disabled={loadingAction === "chat"}
             >
-              Chat on Viber
+              {loadingAction === "chat" ? (
+                <Loader2 size={16} className="spin" />
+              ) : (
+                <MessageCircle size={16} />
+              )}
+              <span>Chat on Viber</span>
             </button>
           </div>
 
-          <form className="contact-form" onSubmit={(e) => e.preventDefault()}>
+          <form className="contact-form glass-contact-form" onSubmit={(e) => e.preventDefault()}>
             <div className="field">
               <label className="label" htmlFor="fullName">
                 Full Name
@@ -166,23 +175,35 @@ export default function ContactSection() {
               {errors.details && <p className="error-text">{errors.details}</p>}
             </div>
 
-<div className="contact-actions">
-  <button
-    type="button"
-    className="btn-viber"
-    onClick={handleSendViber}
-  >
-    Send via Viber
-  </button>
+            <div className="contact-actions">
+              <button
+                type="button"
+                className="btn-viber"
+                onClick={handleSendViber}
+                disabled={loadingAction === "viber"}
+              >
+                {loadingAction === "viber" ? (
+                  <Loader2 size={18} className="spin" />
+                ) : (
+                  <MessageCircle size={18} />
+                )}
+                <span>{loadingAction === "viber" ? "Opening Viber..." : "Send via Viber"}</span>
+              </button>
 
-  <button
-    type="button"
-    className="btn-email"
-    onClick={handleSendEmail}
-  >
-    Send via Email
-  </button>
-</div>
+              <button
+                type="button"
+                className="btn-email"
+                onClick={handleSendEmail}
+                disabled={loadingAction === "email"}
+              >
+                {loadingAction === "email" ? (
+                  <Loader2 size={18} className="spin" />
+                ) : (
+                  <Mail size={18} />
+                )}
+                <span>{loadingAction === "email" ? "Opening Email..." : "Send via Email"}</span>
+              </button>
+            </div>
           </form>
         </div>
       </div>
