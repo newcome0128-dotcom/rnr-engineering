@@ -759,6 +759,23 @@ section {
   resize: vertical;
 }
 
+.contact-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.error-text {
+  color: #c62828;
+  font-size: 0.92rem;
+  margin-top: 6px;
+}
+
+body.dark .error-text {
+  color: #ff8a80;
+}
+
 /* =========================
    FOOTER + COPY TO CLIPBOARD
    ========================= */
