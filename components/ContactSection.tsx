@@ -9,8 +9,8 @@ type FormState = {
   details: string;
 };
 
-const VIBER_NUMBER = "639383636340"; // replace with your real Viber number
-const EMAIL_TO = "alvin.3dcc@gmail.com";   // replace with your real email
+const VIBER_NUMBER = "639383636340";
+const EMAIL_TO = "alvin.3dcc@gmail.com";
 
 export default function ContactSection() {
   const [form, setForm] = useState<FormState>({
@@ -64,16 +64,22 @@ export default function ContactSection() {
     ].join("\n");
   };
 
-  const handleViber = () => {
-    if (!validate()) return;
-
-    const message = encodeURIComponent(buildMessage());
-    const url = `viber://chat?number=%2B${VIBER_NUMBER}&text=${message}`;
-
+  const handleViberChat = () => {
+    const url = `viber://chat?number=%2B${VIBER_NUMBER}`;
     window.location.href = url;
   };
 
-  const handleEmail = () => {
+  const handleSendViber = () => {
+    if (!validate()) return;
+
+    const message = encodeURIComponent(buildMessage());
+
+    // Viber deep link with message
+    const url = `viber://forward?text=${message}`;
+    window.location.href = url;
+  };
+
+  const handleSendEmail = () => {
     if (!validate()) return;
 
     const subject = encodeURIComponent(
@@ -94,10 +100,17 @@ export default function ContactSection() {
         </div>
 
         <div className="contact-wrap">
-          <form
-            className="contact-form"
-            onSubmit={(e) => e.preventDefault()}
-          >
+          <div className="contact-quick">
+            <button
+              type="button"
+              className="quick-link"
+              onClick={handleViberChat}
+            >
+              Chat on Viber
+            </button>
+          </div>
+
+          <form className="contact-form" onSubmit={(e) => e.preventDefault()}>
             <div className="field">
               <label className="label" htmlFor="fullName">
                 Full Name
@@ -154,11 +167,19 @@ export default function ContactSection() {
             </div>
 
             <div className="contact-actions">
-              <button type="button" className="btn-secondary" onClick={handleViber}>
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={handleSendViber}
+              >
                 Send via Viber
               </button>
 
-              <button type="button" className="btn-primary" onClick={handleEmail}>
+              <button
+                type="button"
+                className="btn-primary"
+                onClick={handleSendEmail}
+              >
                 Send via Email
               </button>
             </div>
