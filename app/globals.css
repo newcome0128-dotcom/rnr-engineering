@@ -19,10 +19,8 @@
   --text-main: var(--navy);
   --text-muted: #555;
 
-  /* Background image */
---site-bg: url("/images/hero-bg.webp");
+  --site-bg: url("/images/backgrounds/hero-bg.webp");
 }
-
 /* =========================
    RESET / BASE
    ========================= */
@@ -269,11 +267,9 @@ section {
    ========================= */
 .hero {
   min-height: 72vh;
-
   background:
-    linear-gradient(rgba(20,33,61,0.75), rgba(0,0,0,0.75)),
-    url("/images/backgrounds/hero-bg.webp") center / cover no-repeat;
-
+    linear-gradient(rgba(20, 33, 61, 0.75), rgba(0, 0, 0, 0.75)),
+    var(--site-bg) center / cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
